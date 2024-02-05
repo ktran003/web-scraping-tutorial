@@ -13,19 +13,42 @@ async function getQuotes() {
 
     const quotes = await page.evaluate(() => {
 
-      // fetch first element with class "quote"
-      const quote = document.querySelector(".quote");
+      // fetch every div element with class "quote"
+      const quoteList = document.querySelectorAll(".quote");
 
-      // fetch sub-elements of quote
+      // fetch sub-elements of quote for each div
       // innertext = displayed text
-      const text = quote.querySelector(".text").innerText;
-      const author = quote.querySelector(".author").innerText;
-
-      return {text, author}
-    })
+      return Array.from(quoteList).map((quote) => {
+        const text = quote.querySelector(".text").innerText;
+        const author = quote.querySelector(".author").innerText;
+  
+        return { text, author };
+      });
+    });
 
     console.log(quotes);
 
+    await page.click(".pager > .next > a");
+
+    console.log("New page");
+
+     const pageTwoQuotes = await page.evaluate(() => {
+
+      // fetch every div element with class "quote"
+      const quoteList = document.querySelectorAll(".quote");
+
+      // fetch sub-elements of quote for each div
+      // innertext = displayed text
+      return Array.from(quoteList).map((quote) => {
+        const text = quote.querySelector(".text").innerText;
+        const author = quote.querySelector(".author").innerText;
+  
+        return { text, author };
+      });
+    });
+
+    console.log(pageTwoQuotes);
+    
     await browser.close();
 
 }
